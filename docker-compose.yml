@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  voice-bridge:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      - PORT=8787
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - ELEVEN_AGENT_ID=${ELEVEN_AGENT_ID}
+      - ELEVEN_WS_URL=wss://api.elevenlabs.io/v1/convai/ws
+      - BERRY_SUPERVISOR_URL=http://supervisor:8080/invoke
+      - LOG_LEVEL=info
+      - REQUEST_TIMEOUT_MS=30000
+    env_file:
+      - .env
+    depends_on:
+      - supervisor
+
+  supervisor:
+    image: berry-supervisor:latest
+    ports:
+      - "8080:8080"
+    # Add any required environment variables or volumes for the supervisor service
